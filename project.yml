@@ -1,22 +1,19 @@
 parameters: {}
 environment: {}
 packages:
-    - name: do-api
+    - name: kube
       shared: false
       environment: {}
       parameters: {}
       annotations: {}
       functions:
-        - name: api
+        - name: list
           binary: false
           main: ""
           runtime: python:3.11
           web: true
-          webSecure: Qj8Sqd1Hf5nLYkb
+          webSecure: false
           parameters: {}
-          environment:
-            DO_API_TOKEN: ${DO_API_TOKEN}
+          environment: {}
           annotations: {}
-          limits:
-            memory: 512
-            timeout: 5000
+          limits: {}
