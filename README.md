@@ -1,4 +1,4 @@
-A serverless function example built for DigitalOcean Functions that retrieves droplet information from the DigitalOcean API. This function demonstrates how to create API-connected serverless functions that can be integrated with GenAI platforms for function calling capabilities. Built using Python 3.11, it leverages the [pydo](https://pypi.org/project/pydo/) client to interact with DigitalOcean services.
+A serverless function example built for DigitalOcean Functions that retrieves your Cluster's information from the DigitalOcean API. This function demonstrates how to create API-connected serverless functions that can be integrated with GenAI platforms for function calling capabilities. Built using Python 3.11, it leverages the [kubernetes](https://github.com/kubernetes-client/python) client to interact with DOKS along with [boto3](https://pypi.org/project/boto3/) for interacting with Spaces..
 
 ---
 
@@ -20,9 +20,9 @@ A serverless function example built for DigitalOcean Functions that retrieves dr
 
 ## Introduction
 
-The **do-api** function is a practical example of creating serverless functions on [DigitalOcean Functions](https://docs.digitalocean.com/products/functions/). It retrieves droplet information from the DigitalOcean API and is structured to be easily integrated as a function calling endpoint for GenAI platforms and Large Language Models (LLMs).
+The **do-api** function is a practical example of creating serverless functions on [DigitalOcean Functions](https://docs.digitalocean.com/products/functions/). It retrieves a Cluster Pod information from the DigitalOcean API and is structured to be easily integrated as a function calling endpoint for GenAI platforms and Large Language Models (LLMs).
 
-This function supports fetching details for a specific droplet by supplying a `droplet_id` or listing droplets filtered by an optional tag. The function returns key details such as droplet ID, name, status, creation time, memory, vCPUs, disk, region, image, associated public IP address, and tags in a format suitable for AI consumption.
+This function supports fetching details for a specific cluster by supplying a `kubeconfig` stored in Spaces. The function returns key details such as pod name, the namespace, pod status and its IP.
 
 ### GenAI Integration Use Cases
 
