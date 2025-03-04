@@ -31,15 +31,15 @@ This function can be used as:
 - An API connector for AI agents managing cloud resources
 - A data source for AI-powered cloud management dashboards
 
-> **Note:** The DigitalOcean API token must be provided via the `DO_API_TOKEN` environment variable.
 
 ---
 
 ## Features
 
-- **Retrieve Specific Droplet:** Get information on a single droplet using its `droplet_id`.
-- **List Droplets:** Retrieve a list of droplets with optional filtering using a `tag` and pagination via the `limit` parameter.
-- **JSON Response:** Returns droplet details in a JSON formatted response.
+- **Retrieve Specific Pod:** Get information on a single pod.
+- **List Pods:** Retrieve a list all  pods on your cluster.
+- **List Namespaces:** Retrieve a list all namespaces on your cluster.
+- **List Pod Status and Ips:** Retrieve the pod Status and IPs
 - **Web-Enabled Function:** Configured to be deployed as a web-accessible function with an associated web secure token.
 
 ---
@@ -50,14 +50,12 @@ This function can be used as:
 do-api/
 ├── project.yml                         # Project configuration file for deployment
 └── packages/
-    ├── do-api/
-    │   └── api/
-    │       ├── __main__.py             # Main API function script
-    │       ├── build.sh                # Build script for dependency installation
-    │       └── requirements.txt        # Python dependencies (pydo==0.8.0)
-    └── sample/
-        └── hello/
-            └── hello.py                # Sample function for greeting
+    ── kube/
+      └── list/
+         ├── __main__.py             # Main API function script
+         ├── build.sh                # Build script for dependency installation
+         └── requirements.txt        # Python dependencies (kubernetes==32.0.1)
+
 ```
 
 - **project.yml**
@@ -69,43 +67,42 @@ do-api/
 - **packages/do-api/api/build.sh**
   A shell script to set up a virtual environment and install required Python packages targeting the correct runtime directory.
 
-- **packages/sample/hello/hello.py**
-  A simple sample function that returns a greeting message. Useful for testing basic function deployment.
-
 ---
 
 ## Setup & Installation
 
 ### Environment Variables
 
-Before running the API function, you need to set the `DO_API_TOKEN` environment variable with your DigitalOcean API token. For example:
+Before running the API function, you need to set the "SPACES_ACCESS_KEY" and "SPACES_SECRET_KEY" environment variables.
 
-```bash
-export DO_API_TOKEN="your_digitalocean_api_token"
-```
 
 ### Python Dependencies
 
 The function uses Python 3.11. The required dependency is specified in `packages/do-api/api/requirements.txt`:
 
 ```
-pydo==0.8.0
+kubernetes==32.0.1
 ```
 
 To install the dependencies in your local environment, you can use the provided build script.
 
 ---
-
+### Code Changes
+Update the values for SPACES_REGION, SPACES_BUCKET and KUBECONFIG_FILE as needed.
+```
+SPACES_REGION = "nyc3"  #The region of your Spaces bucket
+SPACES_BUCKET = "kubefiles"  # Spaces bucket name
+KUBECONFIG_FILE = kubeconfig # The name of the kubeconfig file in Spaces BUcket 
+```
 ## Deployment
 
 The project is configured via `project.yml` for deployment on [DigitalOcean Functions](https://docs.digitalocean.com/products/functions/). Key points from the configuration include:
 
 - **Runtime:** Python 3.11 (supported by DigitalOcean Functions)
 - **Function Name:** `api`
-- **Web Accessible:** Enabled with a secure token (`webSecure: your-secure-token`)
 - **Resource Limits:** Memory 512 MB, Timeout 5000 ms (within DigitalOcean Functions limits)
 
-Make sure to integrate your deployment pipeline with the `project.yml` configuration. The environment variable `DO_API_TOKEN` is injected automatically into the function runtime.
+Make sure to integrate your deployment pipeline with the `project.yml` configuration. The environment variables are injected automatically into the function runtime.
 
 ### Deploying to DigitalOcean Functions
 
@@ -118,19 +115,7 @@ Make sure to integrate your deployment pipeline with the `project.yml` configura
 
 ---
 
-## Sample Package
 
-A sample package is provided at `packages/sample/hello/hello.py` for quick testing and to demonstrate a simple function structure. It simply returns a greeting message based on the input.
 
-Usage example:
-
-```python
-# Example payload to test hello function
-args = {"name": "Alice"}
-result = main(args)
-print(result)
-```
-
----
 
 Happy coding!
