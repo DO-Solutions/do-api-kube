@@ -21,6 +21,12 @@ packages:
           limits:
             memory: 1024
             timeout: 5000
+    - name: health
+      shared: false
+      environment: {}
+      parameters: {}
+      annotations: {}
+      functions:      
         - name: health
           binary: false
           main: ""

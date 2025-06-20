@@ -1,9 +1,8 @@
 import json
 import os
 from kubernetes import client, config
-from kubernetes.client.rest import RESTClientObject
-from kubernetes.client import Configuration, ApiClient
 import yaml
+import boto3
 
 SPACES_REGION = "nyc3"  # Change to your region (e.g., sgp1, ams3)
 SPACES_BUCKET = "kubefiles"  # Your Space name
@@ -37,8 +36,6 @@ def main(args):
 
         # Create Kubernetes API client
         v1 = client.CoreV1Api()
-        c = Configuration()
-        rest_client = RESTClientObject(ApiClient(configuration=c))
         
         ### 1. Node Health
         node_list = v1.list_node()
@@ -51,50 +48,18 @@ def main(args):
                         "status": "Ready" if condition.status == "True" else "NotReady"
                     })
 
-        # ### 2. Component Status
-        # component_list = v1.list_component_status()
-        # components_info = []
-        # for comp in component_list.items:
-        #     healthy = all(c.status == "True" for c in comp.conditions)
-        #     components_info.append({
-        #         "name": comp.metadata.name,
-        #         "healthy": healthy
-        #     })
-
-        # # ### 3. API Server /healthz
-        # # response = rest_client.GET('/healthz', _preload_content=False)
-        # # apiserver_health = response.data.decode().strip()
-
-        # ### 4. kube-system Pods Health
-        # kube_system_pods = v1.list_namespaced_pod(namespace="kube-system")
-        # ks_pods_info = []
-        # for pod in kube_system_pods.items:
-        #     ks_pods_info.append({
-        #         "name": pod.metadata.name,
-        #         "status": pod.status.phase
-        #     })
-
-
         return {
             "body": {
                 "status": "success",
                 "node_health": json.dumps(nodes_info)
-                # "components_health": json.dumps(components_info),
-                # "apiserver_health": apiserver_health,
-                # "kube_system_pods": json.dumps(ks_pods_info)
-            }
+                }
         }
 
     except Exception as e:
         return {
             "body": {
                 "status": "error",
-                "pods": json.dumps([]),
-                "count": 0,
                 "node_health": json.dumps([]),
-                "components_health": json.dumps([]),
-                "apiserver_health": "unknown",
-                "kube_system_pods": json.dumps([]),
                 "error": str(e)
             }
         }
